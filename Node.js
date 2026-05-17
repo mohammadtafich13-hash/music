@@ -113,4 +113,4 @@ client.on("messageCreate", async (message) => {
 
 });
 
-client.login("MTUwNTYzNzMxMDQ2NzgwMTIxOQ.GpPSnK.h6TXFeNE-4GoPXk-9c_lOZwTmgHRDnOAa2j6H4");
+client.login("Your_Token_Here");
