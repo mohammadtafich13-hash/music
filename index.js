@@ -7,18 +7,18 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 const distube = new DisTube(client, {
-  plugins: [new YouTubePlugin()]
+  plugins: [new YouTubePlugin()],
 });
 
 const prefix = "!";
 
 client.on("ready", () => {
-  console.log(`${client.user.tag} جاهز 🎧`);
+  console.log(`${client.user.tag} شغال 🎧`);
 });
 
 client.on("messageCreate", async (message) => {
@@ -26,15 +26,14 @@ client.on("messageCreate", async (message) => {
   if (!message.content.startsWith(prefix)) return;
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
-  const cmd = args.shift();
+  const command = args.shift();
 
-  // المساعدة
-  if (cmd === "مساعده") {
+  if (command === "مساعده") {
     return message.reply(`
-📌 الأوامر:
+🎵 الأوامر:
 
 !ادخل
-!شغل اسم الأغنية
+!شغل اسم_الاغنية
 !وقف
 !تشغيل
 !تخطي
@@ -42,46 +41,58 @@ client.on("messageCreate", async (message) => {
     `);
   }
 
-  // دخول الفويس
-  if (cmd === "ادخل") {
+  if (command === "ادخل") {
     const vc = message.member.voice.channel;
-    if (!vc) return message.reply("ادخل روم صوتي أول");
 
-    message.reply("دخلت الفويس 🎧");
+    if (!vc) {
+      return message.reply("ادخل فويس أول");
+    }
+
+    return message.reply("أنا جاهز بالفويس 🎧");
   }
 
-  // تشغيل أغنية
-  if (cmd === "شغل") {
+  if (command === "شغل") {
     const song = args.join(" ");
-    if (!song) return message.reply("اكتب اسم الأغنية");
+
+    if (!song) {
+      return message.reply("اكتب اسم أغنية");
+    }
 
     const vc = message.member.voice.channel;
-    if (!vc) return message.reply("ادخل روم صوتي أول");
 
-    distube.play(vc, song, {
-      textChannel: message.channel,
-      member: message.member
-    });
+    if (!vc) {
+      return message.reply("ادخل فويس أول");
+    }
 
-    message.reply(`🎶 جاري التشغيل: ${song}`);
+    try {
+      await distube.play(vc, song, {
+        textChannel: message.channel,
+        member: message.member,
+      });
+
+      message.reply(`🎶 شغلت: ${song}`);
+    } catch (e) {
+      console.log(e);
+      message.reply("صار خطأ بالتشغيل");
+    }
   }
 
-  // إيقاف
-  if (cmd === "وقف") {
+  if (command === "وقف") {
     distube.pause(message);
+
     message.reply("⏸️ توقف");
   }
 
-  // تشغيل
-  if (cmd === "تشغيل") {
+  if (command === "تشغيل") {
     distube.resume(message);
-    message.reply("▶️ يكمل التشغيل");
+
+    message.reply("▶️ كمل التشغيل");
   }
 
-  // تخطي
-  if (cmd === "تخطي") {
+  if (command === "تخطي") {
     distube.skip(message);
-    message.reply("⏭️ تم التخطي");
+
+    message.reply("⏭️ تخطيت الأغنية");
   }
 });
 
