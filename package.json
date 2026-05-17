@@ -1,0 +1,11 @@
+{
+  "name": "music-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^14.0.0",
+    "distube": "^4.0.0",
+    "@distube/youtube": "^1.0.0",
+    "ffmpeg-static": "^5.0.0"
+  }
+}
